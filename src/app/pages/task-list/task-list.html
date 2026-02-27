@@ -1,0 +1,11 @@
+<h2>Task List</h2>
+
+<div *ngIf="loading">Loading tasks...</div>
+
+<ul *ngIf="!loading">
+  <li *ngFor="let task of tasks">
+    <a [routerLink]="['/tasks', task.id]">
+      {{ task.title }}
+    </a>
+  </li>
+</ul>
