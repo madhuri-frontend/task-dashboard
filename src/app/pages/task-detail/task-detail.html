@@ -1,0 +1,18 @@
+<h2>Task Detail</h2>
+
+<div *ngIf="loading">Loading task...</div>
+
+<div *ngIf="!loading">
+  <p><strong>ID:</strong> {{ task?.id }}</p>
+  <p><strong>Title:</strong> {{ task?.title }}</p>
+  <p>
+    <strong>Status:</strong>
+    {{ task?.completed ? 'Completed' : 'Pending' }}
+  </p>
+</div>
+
+<!-- <h2>Task Detail</h2>
+
+<p>ID: {{ task?.id }}</p>
+<p>Title: {{ task?.title }}</p>
+<p>Status: {{ task?.completed }}</p> -->
