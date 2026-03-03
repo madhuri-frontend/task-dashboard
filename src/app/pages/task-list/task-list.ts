@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TaskService } from '../../services/task';
 import { RouterLink } from '@angular/router';
@@ -8,25 +8,35 @@ import { RouterLink } from '@angular/router';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './task-list.html',
-  styleUrl: './task-list.css',
+  styleUrls: ['./task-list.css'],
 })
-export class TaskListComponent implements OnInit {
-  tasks: any[] = [];
-  loading = true;
+export class TaskListComponent {
+  deleteTask(id: number) {
+    const updated = this.tasks().filter((task) => task.id !== id);
+    this.tasks.set(updated);
+  }
+  toggleTask(id: number) {
+    const updated = this.tasks().map((task) =>
+      task.id === id ? { ...task, completed: !task.completed } : task,
+    );
 
-  constructor(private taskService: TaskService) {}
+    this.tasks.set(updated);
+  }
+  tasks = signal<any[]>([]);
+  searchTerm = signal('');
 
-  ngOnInit(): void {
-    this.taskService.getTasks().subscribe({
-      next: (data) => {
-        console.log(data);
-        this.tasks = data.slice(0, 20);
-        this.loading = false;
-      },
-      error: (err) => {
-        console.error(err);
-        this.loading = false;
-      },
+  filteredTasks = computed(() => {
+    const term = this.searchTerm().toLowerCase();
+    return this.tasks().filter((task) => task.title.toLowerCase().includes(term));
+  });
+
+  constructor(private taskService: TaskService) {
+    this.taskService.getTasks().subscribe((data) => {
+      this.tasks.set(data.slice(0, 20));
     });
+  }
+
+  updateSearch(value: string) {
+    this.searchTerm.set(value);
   }
 }

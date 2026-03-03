@@ -2,11 +2,13 @@
 
 <div *ngIf="loading()">Loading...</div>
 
-<div *ngIf="!loading()">
+<div *ngIf="!loading()" class="detail-card">
   <p><strong>ID:</strong> {{ task()?.id }}</p>
   <p><strong>Title:</strong> {{ task()?.title }}</p>
   <p>
     <strong>Status:</strong>
-    {{ task()?.completed ? 'Completed' : 'Pending' }}
+    <span class="badge" [class.completed]="task()?.completed" [class.pending]="!task()?.completed">
+      {{ task()?.completed ? 'Completed' : 'Pending' }}
+    </span>
   </p>
 </div>

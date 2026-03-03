@@ -1,11 +1,24 @@
 <h2>Task List</h2>
 
-<div *ngIf="loading">Loading tasks...</div>
+<input
+  type="text"
+  placeholder="Search tasks..."
+  (input)="updateSearch($event.target.value)"
+  class="search-input"
+/>
 
-<ul *ngIf="!loading">
-  <li *ngFor="let task of tasks">
-    <a [routerLink]="['/tasks', task.id]">
-      {{ task.title }}
-    </a>
-  </li>
-</ul>
+<div class="task-grid">
+  <div class="task-card" *ngFor="let task of filteredTasks()">
+    <h3>{{ task.title }}</h3>
+
+    <span class="badge" [class.completed]="task.completed" [class.pending]="!task.completed">
+      {{ task.completed ? 'Completed' : 'Pending' }}
+    </span>
+
+    <button (click)="toggleTask(task.id)">Toggle Status</button>
+
+    <button (click)="deleteTask(task.id)" class="delete-btn">Delete</button>
+
+    <button [routerLink]="['/tasks', task.id]">View Details</button>
+  </div>
+</div>
